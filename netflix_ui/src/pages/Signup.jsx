@@ -150,8 +150,8 @@ const Container = styled.div`
             transition: all 0.1s ease-in-out;
           }
           .button:active {
-            transform: scale(0.95); /* Slight shrink effect */
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow when clicked */
+            transform: scale(0.95); 
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
           }
         }
 

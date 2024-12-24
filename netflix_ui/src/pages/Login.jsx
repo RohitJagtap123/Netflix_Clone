@@ -47,7 +47,7 @@ function Login() {
           {/* New Sign-up Link */}
           <SignUpText>
             New to Netflix?{" "}
-            <StyledLink to="/signup">Sign up now</StyledLink>
+            <StyledLink to="/">Sign up now</StyledLink>
           </SignUpText>
         </Form>
       </FormContainer>
