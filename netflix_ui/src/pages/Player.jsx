@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BsArrowLeft } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import video from "../assets/41. Print All Prime From 1 to N.mp4";
+import video from "../assets/Netflix Intro.ia.mp4";
 export default function Player() {
   const navigate = useNavigate();
 

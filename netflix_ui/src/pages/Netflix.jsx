@@ -8,6 +8,7 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMovies, getGenres } from '../store';
+import Slider from '../components/Slider';
 
 export default function Netflix() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,12 +19,11 @@ export default function Netflix() {
 
   useEffect(()=>{
     dispatch(getGenres());
-  }, []);
+  }, [dispatch]);
 
   useEffect(()=>{
     if (genresLoaded) dispatch(fetchMovies({type:"all"}));
-  }
-  );
+  },[genresLoaded, dispatch]);
 
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true);
@@ -48,24 +48,30 @@ export default function Netflix() {
           </div>
         </div>
       </div>
+      <Slider movies={movies}/>
     </Container>
   );
 }
 
 const Container = styled.div`
-background-color: black;
+  background-color: black;
+
   .hero {
     position: relative;
+
     .background-image {
       filter: brightness(60%);
     }
+
     img {
       height: 100vh;
       width: 100vw;
     }
+
     .container {
       position: absolute;
       bottom: 0rem;
+
       .logo {
         img {
           width: 60%;
@@ -73,16 +79,17 @@ background-color: black;
           margin-left: 6rem;
         }
       }
+
       .buttons {
         margin: 3rem;
         gap: 1.5rem;
-        margin-left:6rem;
+        margin-left: 6rem;
 
         button {
-          font-size: 1rem; 
-          gap: 0.5rem; 
+          font-size: 1rem;
+          gap: 0.5rem;
           border-radius: 0.2rem;
-          padding: 0.4rem 1.2rem; 
+          padding: 0.4rem 1.2rem;
           border: none;
           cursor: pointer;
           transition: 0.2s ease-in-out;
@@ -96,7 +103,7 @@ background-color: black;
             color: white;
 
             svg {
-              font-size: 1.2rem;  
+              font-size: 1.2rem;
             }
           }
         }
