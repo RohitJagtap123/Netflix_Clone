@@ -5,7 +5,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { firebaseAuth } from '../utils/firebase-config';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
-import NotAvailable from './NotAvailable';
+import NotAvailable from '../components/NotAvailable';
 import Slider from '../components/Slider';
 import SelectGenre from '../components/SelectGenre';
 

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom"; // Import Link
+import { useNavigate, Link } from "react-router-dom";
 import BackgroundImage from "../components/BackgroundImage";
 import Header from "../components/Header";
 import { onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseAuth } from "../utils/firebase-config";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,10 +14,16 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    if (!email || !password) {
+      toast.error("Both email and password required.");
+      return;
+    }
     try {
       await signInWithEmailAndPassword(firebaseAuth, email, password);
+      toast.success("Login successful! Redirecting...");
     } catch (error) {
       console.error("Sign-in Error:", error.message);
+      toast.error("Sign in failed. Please check your credentials.");
     }
   };
 
@@ -26,6 +33,7 @@ function Login() {
 
   return (
     <Container>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
       <BackgroundImage />
       <Header />
       <FormContainer>
@@ -47,7 +55,7 @@ function Login() {
           {/* New Sign-up Link */}
           <SignUpText>
             New to Netflix?{" "}
-            <StyledLink to="/">Sign up now</StyledLink>
+            <StyledLink to="/signup">Sign up now</StyledLink>
           </SignUpText>
         </Form>
       </FormContainer>

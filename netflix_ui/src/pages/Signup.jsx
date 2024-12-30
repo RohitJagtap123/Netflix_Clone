@@ -4,8 +4,9 @@ import BackgroundImage from '../components/BackgroundImage';
 import Header from '../components/Header';
 import { firebaseAuth } from "../utils/firebase-config";
 import { useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth"
-
+import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Signup() {
     const [showPassword, setShowPassword] = useState(false);
@@ -16,15 +17,23 @@ export default function Signup() {
     const navigate = useNavigate();
 
     const handleSignin = async () => {
-        try{
-            const {email, password}=formValues;
+        try {
+            const { email, password } = formValues;
+
+            if (password.length < 6) {
+                toast.error("Password must be at least 6 characters long!");
+                return;
+            }
+
             await createUserWithEmailAndPassword(firebaseAuth, email, password);
-        }catch(err){
+            toast.success("Sign-up successful! Redirecting...");
+        } catch (err) {
+            toast.error(err.message || "Failed to sign up. Please try again.");
             console.log(err);
         }
     };
 
-    onAuthStateChanged(firebaseAuth, (currentUser)=>{
+    onAuthStateChanged(firebaseAuth, (currentUser) => {
         if (currentUser) navigate("/netflix");
     });
 
@@ -74,6 +83,7 @@ export default function Signup() {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </Container>
     );
 }
@@ -168,8 +178,8 @@ const Container = styled.div`
             transition: all 0.1s ease-in-out;
     }
     .signin-btn:active {
-        transform: scale(0.95); /* Slight shrink effect */
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow when clicked */
+        transform: scale(0.95); 
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
         }
       }
     }

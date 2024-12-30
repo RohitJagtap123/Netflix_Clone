@@ -5,12 +5,33 @@ import { IoPlayCircleSharp } from "react-icons/io5";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RiThumbUpFill, RiThumbDownFill } from "react-icons/ri";
 import { BiChevronDown } from "react-icons/bi";
-import video from "../assets/Netflix Intro.ia.mp4";
 import { BsCheck } from "react-icons/bs";
+import axios from "axios";
+import { onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth } from "../utils/firebase-config";
+import { useDispatch } from "react-redux";
+import { removeMovieFromLiked } from "../store";
+import video from "../assets/Netflix Intro.ia.mp4";
 
 export default React.memo(function Card({ index, movieData, isLiked = false }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
+  const [email, setEmail] = useState(undefined);
+
+  onAuthStateChanged(firebaseAuth, (currentUser) => {
+    if (currentUser) {
+      setEmail(currentUser.email);
+    } else navigate("/login");
+  });
+
+  const addToList = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/user/add", {email,data: movieData,});
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Container
@@ -34,15 +55,15 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
             <video
               src={video}
               autoPlay={true}
-              muted
               loop
+              muted
               onClick={() => navigate("/player")}
             />
           </div>
           <div className="info-container flex column">
-            <h4 className="name" onClick={() => navigate("/player")}>
+            <h3 className="name" onClick={() => navigate("/player")}>
               {movieData.name}
-            </h4>
+            </h3>
             <div className="icons flex j-between">
               <div className="controls flex">
                 <IoPlayCircleSharp
@@ -54,12 +75,17 @@ export default React.memo(function Card({ index, movieData, isLiked = false }) {
                 {isLiked ? (
                   <BsCheck
                     title="Remove from List"
+                    onClick={() =>
+                      dispatch(
+                        removeMovieFromLiked({ movieId: movieData.id, email })
+                      )
+                    }
                   />
                 ) : (
-                  <AiOutlinePlus title="Add to my list"/>
+                  <AiOutlinePlus title="Add to my list" onClick={addToList} />
                 )}
               </div>
-              <div className="info"> 
+              <div className="info">
                 <BiChevronDown title="More Info" />
               </div>
             </div>
@@ -92,7 +118,7 @@ const Container = styled.div`
   .hover {
     z-index: 99;
     height: max-content;
-    width: 15rem;
+    width: 20rem;
     position: absolute;
     top: -18vh;
     left: 0;
@@ -132,7 +158,7 @@ const Container = styled.div`
         gap: 1rem;
       }
       svg {
-        font-size: 1rem;
+        font-size: 2rem;
         cursor: pointer;
         transition: 0.3s ease-in-out;
         &:hover {
@@ -143,9 +169,8 @@ const Container = styled.div`
     .genres {
       ul {
         gap: 1rem;
-        font-size: 0.7rem;
         li {
-          padding-right: 0.5rem;
+          padding-right: 0.7rem;
           &:first-of-type {
             list-style-type: none;
           }
